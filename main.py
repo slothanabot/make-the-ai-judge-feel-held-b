@@ -25,6 +25,11 @@ def main() -> None:
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
+    # Round-trip check: the file on disk must be exactly the text we meant
+    # to write, so a partial write or encoding slip fails loudly here.
+    with open(path, "r", encoding="utf-8") as f:
+        if f.read() != text:
+            raise ValueError("entry.txt does not match TEXT after write")
 
 
 if __name__ == "__main__":
